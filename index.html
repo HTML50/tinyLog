@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>每日一题</title>
+    <meta charset="utf-8">
+</head>
+<style>
+body,
+html {
+    height: 100%;
+}
+
+#stack {
+    margin: auto;
+    width: 80%;
+    height: 100%;
+}
+
+li {
+    border: 1px solid #eee;
+    margin: auto;
+    margin-bottom: 20px;
+    width: 70%;
+    background: #f5f5f5;
+    padding: 30px;
+    list-style: none;
+    border-radius: 10PX;
+    color: #252525;
+}
+
+#new {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    height: 40px;
+    width: 40px;
+    background: #eee;
+    border-radius: 20px;
+    line-height: 40px;
+    font-weight: 900;
+    font-size: 40px;
+    text-align: center;
+    color: #6b6b6b;
+    transition: all 0.3s;
+}
+
+#new:hover {
+    color: #000;
+    background: #f5f5f5;
+    cursor: pointer;
+}
+
+#editor {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(204, 204, 204, 0.72);
+    top: 0;
+    left: 0;
+}
+
+textarea {
+    margin: auto;
+    display: block;
+    border: none;
+    width: 80%;
+    background: #eee;
+    outline: none;
+}
+
+#preview {
+    display: block;
+}
+</style>
+
+<body>
+    <div id='stack'>
+    </div>
+    <div id='new'>+</div>
+    <div id='editor'>
+        <div>
+            <div>
+                内容
+                <textarea id='markdown'></textarea>
+            </div>
+            <div>
+                预览
+                <span id="preview"></span>
+                <div>
+                    <button>发布</button>
+                </div>
+            </div>
+        </div>
+        <script src="marked.min.js"></script>
+        <script>
+        document.getElementById('new').addEventListener('click', function() {
+            editor.style.display = 'block';
+        })
+
+        markdown.addEventListener('keyup', function() {
+            console.log(markdown.value)
+            preview.innerHTML = marked(markdown.value)
+        })
+
+        if (localStorage.init === undefined) {
+            getData();
+            localStorage.setItem('init', true);
+        } else {
+            createComponent(JSON.parse(localStorage.body));
+        }
+
+
+        function check() {
+
+        }
+
+        function getData() {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', 'https://api.github.com/repos/HTML50/tinyLog/issues/1/comments?per_page=100');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    let res =
+                        createComponent(JSON.parse(xhr.response));
+                    localStorage.setItem('body', xhr.response)
+                }
+            };
+            xhr.send();
+        }
+
+        function createComponent(obj) {
+            let len = obj.length,
+                source = '';
+            for (let i = len - 1; i >= 0; i--) {
+                source += '<li>' + marked(obj[i].body) + '</li>'
+            }
+
+            stack.innerHTML = source;
+        }
+        </script>
+</body>
+
+</html>
