@@ -5,6 +5,7 @@
     <title>每日一题</title>
     <meta charset="utf-8">
 </head>
+<link rel="stylesheet" type="text/css" href="github.css">
 <style>
 body,
 html {
@@ -14,7 +15,7 @@ html {
 #stack {
     margin: auto;
     width: 80%;
-    height: 100%;
+    transition: height 0.3s;
 }
 
 li {
@@ -22,11 +23,12 @@ li {
     margin: auto;
     margin-bottom: 20px;
     width: 70%;
-    background: #f5f5f5;
+    background: #f6f8fa;
     padding: 30px;
     list-style: none;
     border-radius: 10PX;
     color: #252525;
+    transition: opacity 0.3s;
 }
 
 #new {
@@ -56,77 +58,279 @@ li {
     position: fixed;
     width: 100%;
     height: 100%;
-    background: rgba(204, 204, 204, 0.72);
+    background: rgba(255, 255, 255, 0.9);
     top: 0;
     left: 0;
 }
 
 textarea {
     margin: auto;
-    display: block;
     border: none;
-    width: 80%;
+    width: 90%;
+    height: 500px;
     background: #eee;
     outline: none;
+    padding: 20px;
 }
 
-#preview {
-    display: block;
+pre{
+	padding: 20px;
+    background: rgb(255, 255, 255);
 }
+
+code{
+	background: #fff;
+    display: inline-block;
+    padding: 5px;
+    margin: 0 5px;
+}
+#preview {
+    background: #eee;
+    padding: 20px;
+    min-height: 200px;
+    max-height: 500px;
+    overflow-y: scroll;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+}
+
+.column {
+    width: 49%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.submit {
+    position: fixed;
+    right: 20px;
+    top: 35%;
+}
+
+.submit div {
+    margin-bottom: 100px;
+}
+
+
+.hover:hover {
+    filter: drop-shadow(1px 1px 8px #666);
+}
+
+
+#spinner{
+	position: fixed;
+	height: 48px;
+    width: 88px;
+	top: 0;left: 0;right: 0;bottom: 0;
+	margin: auto;
+	visibility: hidden;
+}
+
+#spinner span{
+	margin: 10px;
+}
+
+.dot{
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-radius: 8px;
+    background: hsl(206, 93%, 55%);
+    position: absolute;
+    top: 20px;
+}
+
+
+.dot1{
+	left: 0;
+}
+
+.dot2{
+	left: 20px;
+}
+
+.dot3{
+	left: 40px;
+}
+.dot4{
+	left: 60px;
+}
+.animation{
+	animation: move 0.75s infinite;
+}
+
+@keyframes move{
+	50%{top:0px;}
+}
+
+#info{
+	position: fixed;
+	top:-60px;
+	left: 0;
+	width: 100%;
+	height: 60px;
+	background: rgba(25, 189, 71, 0.8);
+	transition: top 0.3s ease-out;
+	text-align: center;
+	font-size: 26px;
+	line-height: 60px;
+	color: #fff;
+}
+
+.footer{
+	text-align: center;
+    color: #2d94bf;
+    font-weight: 900;
+    font-family: sans-serif;
+}
+
+.footer a{color: #2d94bf;}
 </style>
 
 <body>
-    <div id='stack'>
-    </div>
+    <div id='stack'></div>
+    <div class="footer"><a href="//github.com/html50/tinyLog">tinyLog</a> by 2byte</div>
     <div id='new'>+</div>
     <div id='editor'>
-        <div>
-            <div>
-                内容
-                <textarea id='markdown'></textarea>
-            </div>
-            <div>
-                预览
-                <span id="preview"></span>
+        <div class="container">
+            <div class="column">
+                <h1>内容</h1>
                 <div>
-                    <button>发布</button>
+                    <textarea id='markdown'></textarea>
                 </div>
             </div>
+            <div class="column">
+                <h1>预览</h1>
+                <div id="preview"></div>
+            </div>
+            <div class="submit">
+                <div><img id="submitBtn" class="hover" src="check.png" title="提交"></div>
+                <div><img id="closeBtn" class="hover" src="cross.png" title="关闭"></div>
+            </div>
         </div>
-        <script src="marked.min.js"></script>
+        </div>
+        <div id="spinner">
+        	<span class="dot dot1"></span>
+        	<span class="dot dot2"></span>
+        	<span class="dot dot3"></span>
+        	<span class="dot dot4"></span>
+        </div>
+      <div id='info'></div>
+        <script src="marked.js"></script>
+        <script src="highlight.pack.js"></script>
         <script>
+        let isWriteNew = false,
+        	config = 'HTML50/tinyLog/issues/1'
+
+        /* 				key bind					 */
         document.getElementById('new').addEventListener('click', function() {
             editor.style.display = 'block';
         })
 
-        markdown.addEventListener('keyup', function() {
-            console.log(markdown.value)
-            preview.innerHTML = marked(markdown.value)
+        submitBtn.addEventListener('click', function() {
+        	if(markdown.value === ''){
+        		msg('想好写什么了吗？','rgba(228, 216, 6, 0.8)');
+        		return;
+        	}
+
+        	spinnerOn();
+            post();
         })
 
+        closeBtn.addEventListener('click', function() {
+            editor.style.display = 'none';
+        })
+
+        markdown.addEventListener('keyup', function() {
+            preview.innerHTML = marked(markdown.value);
+            setTimeout(function() {
+                preview.scrollTop = preview.scrollHeight;
+            }, 100)
+        })
+
+
+        spinnerInit();
         if (localStorage.init === undefined) {
+        	spinnerOn();
             getData();
             localStorage.setItem('init', true);
         } else {
-            createComponent(JSON.parse(localStorage.body));
+        	checkUpdate();
+        	createComponent(JSON.parse(localStorage.body));
+       		highlight();
         }
 
 
-        function check() {
 
+		/*  				functions					 */
+
+        function checkUpdate() {
+    	 	let xhr = new XMLHttpRequest();
+            xhr.open('GET', 'https://api.github.com/repos/'+config+'/comments?per_page=100');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+	                
+	                let len = JSON.parse(xhr.response).length - JSON.parse(localStorage.body).length;
+	                if(len > 0){
+	                	msg('已经加载最近的更新','rgba(25, 189, 71, 0.8)');
+	                	window.scrollTo(0, 0);
+	                	localStorage.setItem('body', xhr.response);
+	                	for(let i=len-1;i<JSON.parse(xhr.response).length;i++){
+	                			createOne(JSON.parse(xhr.response)[i].body);
+	                	}
+	                }else{
+	                	console.log('load data from localStorage')
+	                }
+                }
+            };
+            xhr.send();
         }
 
         function getData() {
             let xhr = new XMLHttpRequest();
-            xhr.open('GET', 'https://api.github.com/repos/HTML50/tinyLog/issues/1/comments?per_page=100');
+            xhr.open('GET', 'https://api.github.com/repos/'+config+'/comments?per_page=100');
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    let res =
-                        createComponent(JSON.parse(xhr.response));
-                    localStorage.setItem('body', xhr.response)
+	                
+                    localStorage.setItem('body', xhr.response);
+                    
+                    if(!isWriteNew){
+                    	createComponent(JSON.parse(xhr.response));
+                    	spinnerOff();
+                    }
+                    highlight();
                 }
             };
             xhr.send();
+        }
+
+        function post() {
+            let xhr = new XMLHttpRequest();
+            xhr.open('POST', 'https://api.github.com/repos/'+config+'/comments');
+            xhr.setRequestHeader("Authorization", "Basic " + btoa('4bt:000666999bt'))
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                	if(xhr.status === 201){
+                		isWriteNew = true;
+                		localStorage.clear();
+                		getData();
+                		editor.style.display = 'none';
+                		createOne(markdown.value);
+                		window.scrollTo(0, 0);
+                		msg('发布成功','rgba(17, 163, 212, 0.64)');
+                	}
+                    
+                    if(xhr.status === 401){
+                    	msg('重试：网络状态不好','rgba(224, 35, 35, 0.8)');
+                    }
+
+                   spinnerOff(); 	
+                }
+
+            };
+            xhr.send(JSON.stringify({ "body": markdown.value }));
         }
 
         function createComponent(obj) {
@@ -137,6 +341,50 @@ textarea {
             }
 
             stack.innerHTML = source;
+        }
+
+        function createOne(json){
+        	let ele = document.createElement('li');
+        	ele.innerHTML = marked(json);
+        	ele.style.opacity = 0;
+        	stack.insertBefore(ele,stack.firstChild);
+        	setTimeout(function(){
+        		ele.style.opacity = 1;
+        	},100);
+
+        }
+
+        function spinnerInit(){
+        	for(let i=0;i<4;i++){
+        		setTimeout(function(){
+        			document.querySelector('.dot'+(i+1)).classList.add('animation');
+        		},120*i);
+        	}
+        }
+
+        function spinnerOn(){
+        	spinner.style.visibility = 'visible';
+        }
+
+        function spinnerOff(){
+        	spinner.style.visibility = 'hidden';
+        }
+
+        function highlight(){
+        	let nodes = document.querySelectorAll('pre code'),i=0;
+	        for(;i<nodes.length;i++){
+	          hljs.highlightBlock(nodes[i]);
+	        }
+        }
+
+        function msg(text,color){
+        	info.style.background = color;
+        	info.innerText = text;
+        	info.style.top = 0;
+        	setTimeout(function(){
+        		info.style.top = '-60px';
+        	},2000)
+
         }
         </script>
 </body>
