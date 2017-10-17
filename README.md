@@ -1,13 +1,11 @@
 # tinyLog
-~~a pure front-end blog template based on Github issues comment.~~
+tinyLog is a pure front-end blog template which based on Github issues comment.
 
-tinyLog keeps pieces of knowledge or experience of my own.
-
-Write and read my blogs on tinyLog, all data stored in Github issues comment.
+I use tinyLog to keep pieces of knowledge or experience of my own, and post new blogs with a build-in Github account (i.e. *4bt*, which I registered and saved the password in tingLog).
 
 
 
-# Fork
+# Use
 
 if you are interested in this, you can fork this and make a little change in `index.html`.
 

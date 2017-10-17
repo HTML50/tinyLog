@@ -31,6 +31,15 @@ li {
     transition: opacity 0.3s;
 }
 
+.edit{
+    padding-top: 33px;
+    height: 30px;
+    opacity: 0.3;
+    float: right;
+}
+.edit:hover{
+    opacity: 1;
+}
 #new {
     position: fixed;
     right: 20px;
@@ -200,7 +209,7 @@ code{
 	margin: 100px 0;
 }
 </style>
-
+<base target="_blank">
 <body>
     <div id='stack'>
     <div class="center">
@@ -222,7 +231,9 @@ code{
 
     	</div>
     </div>
-    <div class="footer"><a href="//github.com/html50/tinyLog">tinyLog</a> by 2byte</div>
+    <div class="footer" title="any question contact me on Github"><a href="//github.com/html50/tinyLog">tinyLog</a> by 2byte
+    <p><a href="javascript:void(0)" onclick="localStorage.clear();location.reload();">update cache manually</a></p>
+    </div>
     <div id='new'>+</div>
     <div id='editor'>
         <div class="container">
@@ -293,7 +304,8 @@ code{
         markdown.addEventListener('keyup', function() {
             preview.innerHTML = marked(markdown.value);
             setTimeout(function() {
-                preview.scrollTop = preview.scrollHeight;
+                if(markdown.selectionStart === markdown.textLength)
+                    preview.scrollTop = preview.scrollHeight;
             }, 100)
         })
 
@@ -380,7 +392,7 @@ code{
             let len = obj.length,
                 source = '';
             for (let i = len - 1; i >= 0; i--) {
-                source += '<li>' + marked(obj[i].body) + '</li>'
+                source += '<li><a href="'+obj[i].html_url+'"><img src="edit.svg" class="edit"></a>' + marked(obj[i].body) + '</li>'
             }
 
             stack.innerHTML = source;
