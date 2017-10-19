@@ -240,7 +240,7 @@ code{
             <div class="column">
                 <h1>内容</h1>
                 <div>
-                    <textarea id='markdown'></textarea>
+                    <textarea id="markdown'"></textarea>
                 </div>
             </div>
             <div class="column">
@@ -264,7 +264,7 @@ code{
         <script src="highlight.pack.js"></script>
         <script>
         let isWriteNew = false,
-        	timeout,
+        	timeout,visited = false;
         	config = 'HTML50/tinyLog/issues/1';
 
 
@@ -285,6 +285,9 @@ code{
  /* 				key bind					*/
         document.getElementById('new').addEventListener('click', function() {
             editor.style.display = 'block';
+            if(!visited && localStorage.tinyLog){
+                markdown.value = localStorage.tinyLog;
+            }
         })
 
         submitBtn.addEventListener('click', function() {
@@ -441,7 +444,14 @@ code{
         	},2000)
 
         }
-        </script>
+
+
+
+    window.onbeforeunload=function(){
+     localStorage.tinyLog = markdown.value;
+    }
+
+    </script>
 </body>
 
 </html>
