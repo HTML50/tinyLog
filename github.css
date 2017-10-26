@@ -27,7 +27,8 @@
 
 .hljs-keyword,
 .hljs-selector-tag,
-.hljs-type {
+.hljs-type,
+.hljs-function {
   color: #a71d5d;
 }
 
@@ -69,8 +70,7 @@
 .hljs-link {
   text-decoration: underline;
 }
-Viewport
-Window
-×
-×
-×
+
+.hljs-built_in, .hljs-number{
+  color: #005cc5;
+}
