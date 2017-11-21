@@ -1,29 +1,9 @@
 <!DOCTYPE html>
-<html>
-
 <head>
     <title>tinyLog</title>
     <meta charset="utf-8">
-  <script>
-        spinnerInit();
-         function spinnerInit(){
-            for(let i=0;i<4;i++){
-                setTimeout(function(){
-                    document.querySelector('.dot'+(i+1)).classList.add('animation');
-                },120*i);
-            }
-        }
+    <link rel="stylesheet" type="text/css" href="github.css">
 
-        function spinnerOn(){
-            spinner.style.visibility = 'visible';
-        }
-
-        function spinnerOff(){
-            spinner.style.visibility = 'hidden';
-        }
-      </script>
-</head>
-<link rel="stylesheet" type="text/css" href="github.css">
 <style>
 body,
 html {
@@ -62,6 +42,7 @@ li {
 .edit{
     padding-top: 33px;
     height: 30px;
+    width: 30px;
     opacity: 0.3;
     float: right;
 }
@@ -112,12 +93,12 @@ textarea {
 }
 
 pre{
-	padding: 20px;
+    padding: 20px;
     background: rgb(255, 255, 255);
 }
 
 code{
-	background: #fff;
+    background: #fff;
     display: inline-block;
     padding: 5px;
     margin: 0 5px;
@@ -182,29 +163,29 @@ code{
 }
 
 .animation{
-	animation: move 0.75s infinite;
+    animation: move 0.75s infinite;
 }
 
 @keyframes move{
-	50%{transform: translateY(-20px)}
+    50%{transform: translateY(-20px)}
 }
 
 #info{
-	position: fixed;
-	top:-60px;
-	left: 0;
-	width: 100%;
-	height: 60px;
-	background: rgba(25, 189, 71, 0.8);
-	transition: top 0.3s ease-out;
-	text-align: center;
-	font-size: 26px;
-	line-height: 60px;
-	color: #fff;
+    position: fixed;
+    top:-60px;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: rgba(25, 189, 71, 0.8);
+    transition: top 0.3s ease-out;
+    text-align: center;
+    font-size: 26px;
+    line-height: 60px;
+    color: #fff;
 }
 
 .footer{
-	text-align: center;
+    text-align: center;
     color: #2d94bf;
     font-weight: 900;
     font-family: sans-serif;
@@ -214,37 +195,57 @@ code{
 
 
 .pre{
-	background: #eee;
-	margin:20px;
+    background: #eee;
+    margin:20px;
 }
 .title{
-	width: 20%;
-	height: 40px;
+    width: 20%;
+    height: 40px;
 }
 
 .line{
-	width: 30%;
-	height: 20px;
+    width: 30%;
+    height: 20px;
 }
 
 .line1{
-	width: 60%;
-	height: 20px;
+    width: 60%;
+    height: 20px;
 }
 
 .line2{
-	width: 100%;
-	height: 20px;
+    width: 100%;
+    height: 20px;
 }
 .center{
-	width: 60%;
-	margin: auto;
+    width: 60%;
+    margin: auto;
 }
 .sep-line{
-	margin: 100px 0;
+    margin: 100px 0;
 }
 </style>
-<base target="_blank">
+
+    <script>
+        spinnerInit();
+         function spinnerInit(){
+            for(let i=0;i<4;i++){
+                setTimeout(function(){
+                    document.querySelector('.dot'+(i+1)).classList.add('animation');
+                },120*i);
+            }
+        }
+
+        function spinnerOn(){
+            spinner.style.visibility = 'visible';
+        }
+
+        function spinnerOff(){
+            spinner.style.visibility = 'hidden';
+        }
+      </script>
+      <base target="_blank">
+</head>
 <body>
         <div id="spinner">
             <span class="dot dot1"></span>
@@ -273,7 +274,7 @@ code{
     	</div>
     </div>
     <div class="footer" title="any question contact me on Github"><a href="//github.com/html50/tinyLog">tinyLog</a> by 2byte
-    <p><a href="javascript:void(0)" onclick="localStorage.clear();location.reload();">update cache manually</a></p>
+    <p><a href="javascript:void(0)" onclick="localStorage.removeItem('body');localStorage.removeItem('init');localStorage.removeItem('tinyLog');location.reload();">update cache manually</a></p>
     </div>
     <div id='new'>+</div>
     <div id='editor'>
@@ -309,7 +310,6 @@ code{
             getData();
         } else {
         	checkUpdate();
-            spinnerOff();
         }
 
 
@@ -365,6 +365,7 @@ code{
 	                }
                     createComponent(JSON.parse(localStorage.body));
                     highlight();
+                    spinnerOff();
 	               	clearTimeout(timeout);
                 }
             };
@@ -428,7 +429,7 @@ code{
             let len = obj.length,
                 source = '';
             for (let i = len - 1; i >= 0; i--) {
-                source += '<li><a href="'+obj[i].html_url+'"><img src="edit.svg" class="edit"></a>' + marked(obj[i].body) + '</li>'
+                source += '<li><a href="'+obj[i].html_url+'"><img src="edit.svg" alt="edit" class="edit"></a>' + marked(obj[i].body) + '</li>'
             }
 
             stack.innerHTML = source;
