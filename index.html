@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>tinyLog - 记录琐碎</title>
+    <title>tinyLog</title>
     <meta charset="utf-8">
   <script>
         spinnerInit();
@@ -41,6 +41,7 @@ li {
     margin: auto;
     margin-bottom: 20px;
     width: 70%;
+    background: #f6f8fa;
     padding: 30px;
     list-style: none;
     border-radius: 10PX;
@@ -97,6 +98,7 @@ li {
     background: rgba(255, 255, 255, 0.9);
     top: 0;
     left: 0;
+    z-index: 1;
 }
 
 textarea {
@@ -167,6 +169,7 @@ code{
     visibility: show;
     font-size: 0;
     letter-spacing: -4px;
+    z-index: 999;
 }
 
 .dot{
@@ -306,7 +309,6 @@ code{
             getData();
         } else {
         	checkUpdate();
-        	createComponent(JSON.parse(localStorage.body));
        		highlight();
             spinnerOff();
         }
@@ -328,6 +330,7 @@ code{
         		return;
         	}
 
+            submitBtn.style.opacity = 0.3;
         	spinnerOn();
             post();
         })
@@ -354,16 +357,14 @@ code{
                 if (xhr.readyState === 4 && xhr.status === 200) {
 	                
 	                let len = JSON.parse(xhr.response).length - JSON.parse(localStorage.body).length;
-	                if(len > 0){
+	                if(len > 0 || len < 0){
 	                	msg('已经加载最近的更新','rgba(25, 189, 71, 0.8)');
 	                	window.scrollTo(0, 0);
 	                	localStorage.setItem('body', xhr.response);
-	                	for(let i=len-1;i<JSON.parse(xhr.response).length;i++){
-	                			createOne(JSON.parse(xhr.response)[i].body);
-	                	}
 	                }else{
 	                	console.log('load data from localStorage')
 	                }
+                    createComponent(JSON.parse(localStorage.body));
 	               	clearTimeout(timeout);
                 }
             };
@@ -415,7 +416,7 @@ code{
                     if(xhr.status === 401){
                     	msg('重试：网络状态不好','rgba(224, 35, 35, 0.8)');
                     }
-
+                   submitBtn.style.opacity = 1;
                    spinnerOff(); 	
                 }
 
