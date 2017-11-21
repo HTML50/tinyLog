@@ -4,6 +4,24 @@
 <head>
     <title>tinyLog - 记录琐碎</title>
     <meta charset="utf-8">
+  <script>
+        spinnerInit();
+         function spinnerInit(){
+            for(let i=0;i<4;i++){
+                setTimeout(function(){
+                    document.querySelector('.dot'+(i+1)).classList.add('animation');
+                },120*i);
+            }
+        }
+
+        function spinnerOn(){
+            spinner.style.visibility = 'visible';
+        }
+
+        function spinnerOff(){
+            spinner.style.visibility = 'hidden';
+        }
+      </script>
 </head>
 <link rel="stylesheet" type="text/css" href="github.css">
 <style>
@@ -31,7 +49,6 @@ li {
 }
 
 #stack li li{
-    background: #0c0000;
     border: none;
     list-style: inherit;
     padding: 5px;
@@ -139,12 +156,17 @@ code{
 
 
 #spinner{
-	position: fixed;
-	height: 48px;
-    width: 130px;
-	top: 0;left: 0;right: 0;bottom: 0;
-	margin: auto;
-	visibility: hidden;
+    position: fixed;
+    height: 24px;
+    width: 112px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    visibility: show;
+    font-size: 0;
+    letter-spacing: -4px;
 }
 
 .dot{
@@ -221,6 +243,12 @@ code{
 </style>
 <base target="_blank">
 <body>
+        <div id="spinner">
+            <span class="dot dot1"></span>
+            <span class="dot dot2"></span>
+            <span class="dot dot3"></span>
+            <span class="dot dot4"></span>
+        </div>
     <div id='stack'>
     <div class="center">
     	<div class="pre title"></div>
@@ -263,12 +291,6 @@ code{
             </div>
         </div>
         </div>
-        <div id="spinner">
-        	<span class="dot dot1"></span>
-        	<span class="dot dot2"></span>
-        	<span class="dot dot3"></span>
-        	<span class="dot dot4"></span>
-        </div>
       <div id='info'></div>
         <script src="marked.js"></script>
         <script src="highlight.pack.js"></script>
@@ -279,14 +301,14 @@ code{
 
 
  /* 				initial					*/
-        spinnerInit();
+        
         if (localStorage.init === undefined) {
-        	spinnerOn();
             getData();
         } else {
         	checkUpdate();
         	createComponent(JSON.parse(localStorage.body));
        		highlight();
+            spinnerOff();
         }
 
 
@@ -363,11 +385,11 @@ code{
                     
                     if(!isWriteNew){
                     	createComponent(JSON.parse(xhr.response));
-                    	spinnerOff();
                     	localStorage.setItem('init', true);
                     }
                     highlight();
                     clearTimeout(timeout);
+                    spinnerOff();
                 }
             };
             xhr.send();
@@ -409,6 +431,7 @@ code{
             }
 
             stack.innerHTML = source;
+            
         }
 
         function createOne(json){
@@ -420,22 +443,6 @@ code{
         		ele.style.opacity = 1;
         	},100);
 
-        }
-
-        function spinnerInit(){
-        	for(let i=0;i<4;i++){
-        		setTimeout(function(){
-        			document.querySelector('.dot'+(i+1)).classList.add('animation');
-        		},120*i);
-        	}
-        }
-
-        function spinnerOn(){
-        	spinner.style.visibility = 'visible';
-        }
-
-        function spinnerOff(){
-        	spinner.style.visibility = 'hidden';
         }
 
         function highlight(){
