@@ -309,7 +309,6 @@ code{
             getData();
         } else {
         	checkUpdate();
-       		highlight();
             spinnerOff();
         }
 
@@ -365,6 +364,7 @@ code{
 	                	console.log('load data from localStorage')
 	                }
                     createComponent(JSON.parse(localStorage.body));
+                    highlight();
 	               	clearTimeout(timeout);
                 }
             };
