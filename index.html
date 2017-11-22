@@ -49,6 +49,7 @@ li {
 .edit:hover{
     opacity: 1;
 }
+
 #new {
     position: fixed;
     right: 20px;
@@ -132,11 +133,9 @@ code{
     margin-bottom: 100px;
 }
 
-
 .hover:hover {
     filter: drop-shadow(1px 1px 8px #666);
 }
-
 
 #spinner{
     position: fixed;
@@ -458,6 +457,7 @@ code{
         	info.style.background = color;
         	info.innerText = text;
         	info.style.top = 0;
+            info.style.zIndex = 3;
         	setTimeout(function(){
         		info.style.top = '-60px';
         	},2000)
