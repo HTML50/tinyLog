@@ -137,7 +137,7 @@ code{
     filter: drop-shadow(1px 1px 8px #666);
 }
 
-#spinner{
+.spinner{
     position: fixed;
     height: 24px;
     width: 112px;
@@ -146,19 +146,30 @@ code{
     right: 0;
     bottom: 0;
     margin: auto;
-    visibility: show;
     font-size: 0;
     letter-spacing: -4px;
-    z-index: 999;
 }
 
 .dot{
+    margin: 10px;
     width: 8px;
     height: 8px;
     display: inline-block;
     border-radius: 8px;
     background: hsl(206, 93%, 55%);
-    margin: 10px;
+    animation: move 0.75s infinite;
+}
+
+.dot2{
+ animation-delay: 0.12s
+}
+
+.dot3{
+ animation-delay: 0.24s
+}
+
+.dot4{
+ animation-delay: 0.36s
 }
 
 .animation{
@@ -166,8 +177,8 @@ code{
 }
 
 @keyframes move{
-    50%{transform: translateY(-20px)}
-}
+    50%{transform:translateY(20px);}
+}  
 
 #info{
     position: fixed;
@@ -226,15 +237,6 @@ code{
 </style>
 
     <script>
-        spinnerInit();
-         function spinnerInit(){
-            for(let i=0;i<4;i++){
-                setTimeout(function(){
-                    document.querySelector('.dot'+(i+1)).classList.add('animation');
-                },120*i);
-            }
-        }
-
         function spinnerOn(){
             spinner.style.visibility = 'visible';
         }
@@ -246,7 +248,7 @@ code{
       <base target="_blank">
 </head>
 <body>
-        <div id="spinner">
+        <div class="spinner">
             <span class="dot dot1"></span>
             <span class="dot dot2"></span>
             <span class="dot dot3"></span>
